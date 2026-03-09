@@ -1,37 +1,41 @@
 import streamlit as st
 import google.generativeai as genai
 
-# Cấu hình giao diện giống app.hanhchinh.ai.vn
+# Cấu hình giao diện
 st.set_page_config(page_title="AI Hành Chính Việt Nam", layout="wide")
 
-# Nhập API Key (Bạn có thể dán cứng mã AIza... của bạn vào đây)
-API_KEY = "AIzaSyCUuIC53vrbfBH4oEcTbhjMwFnqcI1mIfU"
-genai.configure(api_key=API_KEY)
-model = genai.GenerativeModel('gemini-1.5-flash')
+# QUAN TRỌNG: Thay dãy chữ dưới đây bằng mã AIza... thật của bạn
+API_KEY = "AIzaSyCUuIC53vrbfBH4oEcTbhjMwFnqcI1mIfU" 
 
-# Giao diện chính
+try:
+    genai.configure(api_key=API_KEY)
+    # Sử dụng gemini-1.5-flash là bản ổn định nhất hiện nay
+    model = genai.GenerativeModel('gemini-1.5-flash')
+except:
+    st.error("Lỗi cấu hình API Key. Vui lòng kiểm tra lại mã AIza của bạn.")
+
 st.title("🏛️ TRỢ LÝ SOẠN THẢO VĂN BẢN HÀNH CHÍNH")
 st.markdown("---")
 
-# Chia 2 cột: Trái nhập liệu - Phải kết quả
-col_input, col_output = st.columns([1, 2])
+col_in, col_out = st.columns([1, 2])
 
-with col_input:
-    st.subheader("📌 Cấu hình văn bản")
-    loai_vb = st.selectbox("Chọn loại văn bản", ["Công văn", "Quyết định", "Tờ trình", "Thông báo"])
+with col_in:
+    st.subheader("📌 Nhập thông tin")
+    loai_vb = st.selectbox("Loại văn bản", ["Công văn", "Quyết định", "Tờ trình", "Thông báo"])
     co_quan = st.text_input("Cơ quan ban hành", "Tên cơ quan của bạn")
-    noi_dung = st.text_area("Nội dung tóm tắt", height=200, placeholder="Nhập yêu cầu soạn thảo...")
-    
+    noi_dung = st.text_area("Nội dung tóm tắt", height=200)
     btn = st.button("🚀 BẮT ĐẦU SOẠN THẢO", use_container_width=True)
 
-with col_output:
-    st.subheader("📄 Kết quả soạn thảo")
+with col_out:
+    st.subheader("📄 Kết quả")
     if btn:
         if noi_dung:
-            with st.spinner('AI đang xử lý...'):
-                prompt = f"Soạn thảo {loai_vb} đúng chuẩn Nghị định 30/2020/NĐ-CP cho {co_quan} về: {noi_dung}."
-                response = model.generate_content(prompt)
-                st.text_area("Văn bản AI tạo ra:", value=response.text, height=500)
-                st.success("Đã soạn xong! Bạn có thể copy nội dung trên.")
+            with st.spinner('AI đang soạn thảo...'):
+                try:
+                    prompt = f"Soạn thảo {loai_vb} đúng chuẩn Nghị định 30/2020/NĐ-CP cho {co_quan} về: {noi_dung}."
+                    response = model.generate_content(prompt)
+                    st.text_area("Văn bản hoàn thiện:", value=response.text, height=550)
+                except Exception as e:
+                    st.error(f"Lỗi AI: {e}")
         else:
-            st.error("Vui lòng nhập nội dung!")
+            st.warning("Vui lòng nhập nội dung!")
