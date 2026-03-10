@@ -5,7 +5,7 @@ import google.generativeai as genai
 st.set_page_config(page_title="AI Hành Chính Việt Nam", layout="wide")
 
 # QUAN TRỌNG: Thay dãy chữ dưới đây bằng mã AIza... thật của bạn
-API_KEY = "AIzaSyDOZL4lUP54pKZS8KNZ7zGIRWfXWtK0oDw" 
+API_KEY = "AIzaSyCUuIC53vrbfBH4oEcTbhjMwFnqcI1mIfU" 
 
 try:
     genai.configure(api_key=API_KEY)
