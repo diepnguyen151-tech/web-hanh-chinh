@@ -10,7 +10,7 @@ API_KEY = "AIzaSyCUuIC53vrbfBH4oEcTbhjMwFnqcI1mIfU"
 try:
     genai.configure(api_key=API_KEY)
     # Sử dụng gemini-1.5-flash là bản ổn định nhất hiện nay
-    model = genai.GenerativeModel('gemini-1.5-flash-latest')
+    model = genai.GenerativeModel('gemini-3-flash-preview')
 except:
     st.error("Lỗi cấu hình API Key. Vui lòng kiểm tra lại mã AIza của bạn.")
 
